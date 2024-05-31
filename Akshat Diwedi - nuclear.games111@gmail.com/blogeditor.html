@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Editor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+        integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/Nuclear-Games/Narrative_Nook_Assets_Storage@main/css/blogeditorv1.3.css">
+    <!-- <link rel="stylesheet" href="css/blogeditorv1.1.css"> -->
+</head>
+
+<body>
+
+
+    <div style="display: flex; justify-content: center; width: 100%;">
+        <center>
+            <h2>Blog - Editor - Window</h2>
+            <a href="dashboard.html" target="_blank"><button class="Blogeditornavigatebtn">Dashboard &nbsp;<i
+                        class="fas fa-arrow-right"></i></button></a>
+        </center>
+    </div>
+
+    <center>
+        <div class="hrline" style="width: 93.3%; border-radius: 5px;"></div>
+    </center>
+
+
+    <center>
+        <div class="box">
+            <div class="elementsbox">
+                <div class="blogeditingprops">
+
+                    <br>
+                    <center>
+                        <h2>Give It Some Info !</h2>
+                    </center>
+                    <center>
+                        <div class="hrline" style="width: 75%; border-radius: 2px;"></div>
+                    </center><br><br>
+
+                    <input type="text" id="textInput" placeholder="blog heading = file name"><br>
+                    <input type="text" id="keywordsinput" placeholder="Keywords . Ex: politics, elections , ai">
+                    <input type="file" id="Thumbnailimage" accept="image/*" onchange="convertToBase64()"><br>
+                    <input type="text" id="authorname" placeholder="Enter You Name !" value="Akshat Diwedi" disabled><br>
+                    <input type="text" id="publishingdate" placeholder="Enter Publishing Date Ex : 12 Dec 2023"><br>
+
+
+                    <div class="custom-select-wrapper">
+                        <label for="blogtopicdirectorylocation">Choose any Topic :</label>
+                        <select id="blogtopicdirectorylocation" class="custom-select">
+
+                            <optgroup label="Trending Topics">
+                                <option value="1">Artificial Intelligence</option>
+                                <option value="2">Sanatan Dharma</option>
+                                <option value="3">Technology</option>
+                            </optgroup>
+
+                            <optgroup label="Science & Technology">
+                                <option value="4">Space Exploration</option>
+                                <option value="5">Virtual Reality</option>
+                                <option value="6">Blockchain</option>
+                                <option value="7">Cryptocurrency</option>
+                                <option value="8">Digital Transformation</option>
+                                <option value="9">Cybersecurity</option>
+                                <option value="10">Biotechnology</option>
+                                <option value="11">Electric Vehicles</option>
+                                <option value="12">Internet of Things (IOT)</option>
+                                <option value="13">Data Science</option>
+                                <option value="14">Metaverse</option>
+                            </optgroup>
+
+                            <optgroup label="Society & Politics">
+                                <option value="15">Geo-Politics</option>
+                                <option value="16">Sustainable Development</option>
+                                <option value="17">Climate Change</option>
+                                <option value="18">Renewable Energy</option>
+                                <option value="19">Urban Development</option>
+                                <option value="20">Global Health</option>
+                                <option value="21">Human Rights</option>
+                            </optgroup>
+
+                            <optgroup label="Lifestyle & Culture">
+                                <option value="22">Gaming</option>
+                                <option value="23">Esports</option>
+                                <option value="24">Foods & Recipe</option>
+                                <option value="25">Art & Design</option>
+                                <option value="26">Books</option>
+                                <option value="27">Gardening</option>
+                                <option value="28">Travel & Tourism</option>
+                                <option value="29">Pop Culture</option>
+                                <option value="30">Fitness</option>
+                                <option value="31">Entrepreneurship</option>
+                                <option value="32">Ethical Fashion</option>
+                                <option value="33">Digital Art (NFTs)</option>
+                                <option value="34">Minimalism</option>
+                                <option value="35">Podcasts</option>
+                            </optgroup>
+
+                            <optgroup label="Health & Wellness">
+                                <option value="36">Mental Health</option>
+                                <option value="37">Health & Wellness</option>
+                            </optgroup>
+
+                            <optgroup label="Business & Economy">
+                                <option value="38">E-commerce</option>
+                                <option value="39">Remote Work</option>
+                                <option value="40">Financial Technology (FinTech)</option>
+                                <option value="41">Personal Finance</option>
+                            </optgroup>
+
+                            <optgroup label="Communication & Trends">
+                                <option value="42">Smart Phones</option>
+                                <option value="43">Social Media Trends</option>
+                                <option value="44">Online Education</option>
+                            </optgroup>
+
+                            <optgroup label="Environment">
+                                <option value="45">Weather & Climate</option>
+                            </optgroup>
+ 
+                            <optgroup label="Programming">
+                                <option value="46">HTML</option>
+                                <option value="47">CSS</option>
+                                <option value="48">Javascript</option>
+                                <option value="49">Python</option>
+                                <option value="50">C++</option>
+                                <option value="51">C#</option>
+                                <option value="52">Programming</option>
+                            </optgroup>
+
+                        </select>
+                    </div><br>
+
+
+
+
+
+
+                    <center><br>
+                        <div class="hrline" style="width: 65%; border-radius: 2px;"></div>
+                    </center><br><br>
+
+                    <textarea id="mainblogcontentortext" cols="30" rows="10"
+                        placeholder="Enter Main Blog Content !"></textarea><br>
+                    <textarea id="blogtextconclusion" cols="30" rows="5"
+                        placeholder="Conclusion Of You Blog !"></textarea><br>
+                    <textarea id="descriptioninput" cols="30" rows="10"
+                        placeholder="Write Description of your blog in under 160 Words . Not sure what to type ? Scroll Down !"></textarea><br>
+
+                    <center><button onclick="downloadHtml()">Download Blog File !</button></center>
+                </div>
+            </div>
+
+
+            <div class="realtimeblogview">
+                <iframe id="outputIframe"></iframe>
+            </div>
+
+        </div>
+    </center>
+
+
+    <center>
+        <div class="aiprompts">
+            <center>
+                <h2>SEO Optimized Ai Prompts !</h2>
+            </center>
+            <div class="hrline" style="width: 33%;"></div><br><br><br>
+
+            <label for="inptu">For Generating Tags : </label><br>
+            <input type="text"
+                value="Give me the 10 best possible tags for my blog on topic of { Your selected topic ! } , that contain this blogtext { paste main blog content here ! }"
+                disabled><br><br><br><br>
+
+
+            <label for="input">For Generating Description : </label><br>
+            <input type="text"
+                value="Based on the given blog content , generate the 100% SEO Optimized Description For my blog under 160 Words that contain this blogtext { paste a main content here ! }"
+                disabled><br><br><br><br>
+
+
+            <label for="input">For Generating Short & Engaging Title : </label><br>
+            <input type="text"
+                value="Can you generate short and engaging title for my blog article of in around 10 words for me in which blog topic is { Your selected topic ! } and this is the content { paste main blog content here ! } "
+                disabled><br><br><br><br><br><br>
+
+            * Note : By using this prompts , you can quickly generate some content for your blog while also saving your
+            time . More prompts coming soon !
+        </div>
+    </center>
+
+
+
+    <script
+        src="https://cdn.jsdelivr.net/gh/Akshat-Diwedi/Narrative_Nook_Assets_Storage@main/javascript/blogeditorv1.3.js"></script>
+    <!-- <script src="javascript/blogeditorv1.2.js"></script> -->
+</body>
+
+</html>

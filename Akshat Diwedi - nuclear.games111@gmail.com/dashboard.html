@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Author Dashboard</title>
+    <script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-messaging.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.7/firebase-storage.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Nuclear-Games/Narrative_Nook_Assets_Storage@main/css/dashboardv1.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+
+<body>
+
+
+    <div class="topbar">
+        <h2 class="logoname">Narrative &nbsp;&nbsp; Nook</h2>
+        <h2 class="topbaradmintext">Author Dashboard</h2>
+    </div><br><br><br><br>
+
+
+
+    <div class="BasicControlsTabs">
+        <div class="authornameandcrown" style="width: max-content; padding-right: 20px;">
+            <div class="profile">
+                <!-- https://cdn.jsdelivr.net/gh/Nuclear-Games/Narrative_Nook_Assets_Storage@main/authors/akshat.jpg -->
+                <img src="https://cdn.jsdelivr.net/gh/Nuclear-Games/Narrative_Nook_Assets_Storage@main/authors/akshat.jpg" class="authorprofileimage" alt="">
+                <h2 class="authorname">Akshat Diwedi</h2>
+                <img class="crownimage" src="https://cdn.jsdelivr.net/gh/Nuclear-Games/Narrative_Nook_Assets_Storage@main/icons/Crown.png" alt="">
+            </div>
+        </div>
+
+        <a href="../blogeditor.html" target="_blank"><button class="Blogeditornavigatebtn">Create Post !</button></a>
+    </div>
+
+
+
+    <div class="maincontentorinteractionarea">
+
+        <br>
+        <div class="postuploadbox">
+            <center>
+                <h2>Upload Post</h2>
+                <div class="hr"></div>
+                <input type="file" id="takehtmlfilefromuser">
+                <button class="bloguploadbtn" onclick="uploadFile()">Publish <i class="fas fa-arrow-right"></i></button>
+                <div class="consolearea">
+                    <center>
+                        <p id="consoleoutput"></p>
+                    </center>
+                </div>
+            </center>
+        </div><br>
+
+        <div class="statsarea">
+            <center><button onclick="fetchAndCountViews()" class="sendstatquerytn">Fetch Stats</button></center>
+            <h3 class="waitingforresp">Waiting <br> for the <br> Response . . .</h3>
+            
+                <br><h2 class="followerscounter"></h2>
+                <h2 class="viewscounter"></h2>
+                <h2 class="postcounter"></h2>
+
+        </div>
+
+
+
+        <div class="author_recent_posts">
+            <center><button onclick="fetchAndDisplayRecentFiles()" class="fetchpostbtn">Fetch Recent 10 Posts !</button></center>
+            <center>
+                <div class="latestpostsection">
+                </div>
+            </center>
+        </div>
+
+    </div>
+
+
+
+
+
+
+    <div class="quotes">
+        <center>
+            <h2>Sometimes being lost is the first step towards finding yourself !</h2>
+        </center>
+    </div>
+
+
+
+    <script src="https://cdn.jsdelivr.net/gh/Nuclear-Games/Narrative_Nook_Assets_Storage@main/javascript/dashboardv1.js"></script>
+
+
+
+
+
+    <script>
+
+        function fetchAndCountViews() {
+            var statsarea = document.querySelector('.statsarea');
+            var sendstatquerytn = document.querySelector('.sendstatquerytn');
+            var waitingforresp = document.querySelector('.waitingforresp');
+            var followerscounter = document.querySelector('.followerscounter');
+            var viewscounter = document.querySelector('.viewscounter');
+            var postcounter = document.querySelector('.postcounter');
+
+            const filesRef = database.ref();
+
+            sendstatquerytn.style.display = "none";
+            waitingforresp.style.display = "block";
+
+            filesRef.once('value')
+                .then((snapshot) => {
+                    if (snapshot.exists()) {
+                        let totalViews = 0;
+                        let totalPosts = 0;
+
+                        snapshot.forEach((childSnapshot) => {
+                            const fileData = childSnapshot.val();
+
+                            // Check if the author's name matches "Akshat Diwedi"
+                            if (fileData.authorname === "Akshat Diwedi") {
+                                totalViews += fileData.viewCount;
+                                totalPosts++;
+                            }
+                        });
+
+                        // Format total views with K, M, B suffixes
+                        const formattedViews = formatViews(totalViews);
+
+                        waitingforresp.style.display = "none";
+
+                        viewscounter.style.display = "block";
+                        postcounter.style.display = "block";
+
+                        viewscounter.innerHTML = "Viewers : " + formattedViews;
+                        postcounter.innerHTML = "Posts : " + totalPosts;
+
+                    } else {
+                        console.log('No posts found.');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error fetching posts:', error);
+                });
+        }
+
+        function formatViews(views) {
+            if (views >= 1000000000) {
+                return (views / 1000000000).toFixed(1) + 'B';
+            } else if (views >= 1000000) {
+                return (views / 1000000).toFixed(1) + 'M';
+            } else if (views >= 1000) {
+                return (views / 1000).toFixed(1) + 'K';
+            } else {
+                return views.toString();
+            }
+        }
+
+        // fetchAndCountViews();
+
+
+
+
+
+
+
+
+        function fetchAndDisplayRecentFiles() {
+            document.querySelector('.fetchpostbtn').style.display = 'none';
+            const filesRef = database.ref();
+
+            filesRef.orderByChild('timestamp').limitToLast(10).once('value')
+                .then((snapshot) => {
+                    if (snapshot.exists()) {
+                        const latestpostsection = document.querySelector('.latestpostsection');
+                        latestpostsection.innerHTML = '';
+
+                        snapshot.forEach((childSnapshot) => {
+                            const fileData = childSnapshot.val();
+
+                            // Check if the author's name matches "Akshat Diwedi"
+                            if (fileData.authorname === "Akshat Diwedi") {
+                                const allbuttons = document.createElement('div');
+                                allbuttons.className = 'allbuttons';
+
+                                const linkofblog = document.createElement('a');
+                                linkofblog.className = 'linkofblog';
+                                linkofblog.href = fileData.downloadURL || '';
+                                linkofblog.target = '_blank';
+
+                                const postDiv = document.createElement('div');
+                                postDiv.className = 'latestpost';
+
+                                const authordetails = document.createElement('div');
+                                authordetails.className = 'authordetails';
+
+                                const timestamp = fileData.timestamp;
+                                const date = new Date(timestamp);
+                                const day = date.getDate();
+                                const month = date.getMonth() + 1; // Adding 1 because getMonth() returns zero-based month (0 for January)
+                                const year = date.getFullYear() % 100; // Getting last two digits of the year
+                                const formattedDate = `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year.toString().padStart(2, '0')}`;
+                                console.log(formattedDate);
+                                const timestampdisplay = document.createElement('p');
+                                timestampdisplay.className = 'timestampdisplay';
+                                timestampdisplay.innerText = "▪ " + formattedDate || '';
+
+                                const authorprofile = document.createElement('img');
+                                authorprofile.className = 'authorprofile';
+                                authorprofile.src = fileData.authorprofile || '';
+
+                                const authorname = document.createElement('p');
+                                authorname.className = 'authorname';
+                                authorname.style.display = "flex";
+                                authorname.innerHTML = fileData.authorname || '';
+
+                                const bannerImage = document.createElement('img');
+                                bannerImage.className = 'banner';
+                                bannerImage.src = fileData.thumbnailURL || '';
+
+                                const postHeading = document.createElement('h3');
+                                postHeading.className = 'postheading';
+                                postHeading.innerText = fileData.title || '';
+
+                                const deleteButton = document.createElement('button');
+                                deleteButton.className = 'deleteButton';
+                                deleteButton.innerHTML = '<i class="fa-solid fa-trash"></i>';
+
+                                // Attach event listener for delete button
+                                deleteButton.addEventListener('click', () => {
+                                    // Show alert before deletion
+                                    // Show confirm dialog before deletion
+                                    if (confirm("By Clicking On This Button Your Post Will Be Deleted By Our Side !!!")) {
+                                        // Proceed with deletion
+                                        // Perform deletion from RTDB
+                                        childSnapshot.ref.remove()
+                                            .then(() => {
+                                                // Deletion from RTDB successful, now delete from Storage
+                                                const storageRef = firebase.storage().refFromURL(fileData.downloadURL);
+                                                storageRef.delete()
+                                                    .then(() => {
+                                                        console.log('File deleted from Storage successfully.');
+                                                    })
+                                                    .catch((error) => {
+                                                        console.error('Error deleting file from Storage:', error);
+                                                    });
+                                            })
+                                            .catch((error) => {
+                                                console.error('Error deleting post from RTDB:', error);
+                                            });
+                                    } else {
+                                        // Do nothing, cancel deletion
+                                    }
+
+                                });
+
+                                const viewers = document.createElement('button');
+                                viewers.className = 'viewers';
+                                if (fileData.viewCount >= 1000000000) {
+                                    viewers.innerHTML = '<i class="fas fa-eye"></i>&nbsp;&nbsp;' + (fileData.viewCount / 1000000000).toFixed(1) + 'B';
+                                } else if (fileData.viewCount >= 1000000) {
+                                    viewers.innerHTML = '<i class="fas fa-eye"></i>&nbsp;&nbsp;' + (fileData.viewCount / 1000000).toFixed(1) + 'M';
+                                } else if (fileData.viewCount >= 1000) {
+                                    viewers.innerHTML = '<i class="fas fa-eye"></i>&nbsp;&nbsp;' + (fileData.viewCount / 1000).toFixed(1) + 'K';
+                                } else {
+                                    viewers.innerHTML = '<i class="fas fa-eye"></i>&nbsp;&nbsp;' + fileData.viewCount;
+                                }
+
+                                const gotoblogbutton = document.createElement('button');
+                                gotoblogbutton.className = 'gotoblogbutton';
+                                gotoblogbutton.innerHTML = 'Read now &nbsp;&nbsp;<i class="fas fa-arrow-right"></i>';
+
+                                postDiv.appendChild(bannerImage);
+
+                                postDiv.appendChild(authordetails);
+                                authordetails.appendChild(authorprofile);
+                                authordetails.appendChild(authorname);
+                                authordetails.appendChild(timestampdisplay);
+
+                                postDiv.appendChild(postHeading);
+                                postDiv.appendChild(allbuttons);
+
+                                allbuttons.appendChild(viewers);
+                                allbuttons.appendChild(linkofblog);
+                                allbuttons.appendChild(deleteButton); // Append delete button
+                                linkofblog.appendChild(gotoblogbutton);
+
+                                // Append the postDiv to the latestPostContainer
+                                latestpostsection.appendChild(postDiv);
+                            }
+                        });
+                    } else {
+                        console.log('No recent files found.');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error fetching recent files:', error);
+                });
+        }
+
+        // fetchAndDisplayRecentFiles();
+
+
+    </script>
+
+</body>
+
+</html>
